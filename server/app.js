@@ -82,26 +82,49 @@ app.post('/links',
 
 app.post('/signup',
   (req, res, next) => {
-    let loginData = { username: req.body.username, password: req.body.password };
-    return models.Users.create(loginData)
+    models.Users.create(req.body)
       .then(() => {
         res.location('/');
+        res.render('./')
         res.send();
       })
       .catch(() => {
         res.redirect('/signup');
+        res.render('./signup')
       });
   });
 
 app.get('/signup',
   (req, res, next) => {
     console.log(req.body);
+    res.render('./signup')
+    res.send(req.body);
+  });
+
+app.get('/login',
+  (req, res, next) => {
+    console.log(req.body);
+    res.render('./login')
     res.send(req.body);
   });
 
 app.post('/login',
   (req, res, next) => {
-    res.send('test');
+    models.Users.get({ "username": req.body.username })
+      .then((results) => {
+        if (models.Users.compare(req.body.password, results.password, results.salt)) {
+          res.location('/');
+          res.render('./');
+          res.send();
+        } else {
+          res.location('/login');
+          res.send();
+        }
+      })
+      .catch(() => {
+        res.location('/login')
+        res.send();
+      })
   });
 
 /************************************************************/

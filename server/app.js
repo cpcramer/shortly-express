@@ -76,6 +76,8 @@ app.post('/links',
       });
   });
 
+
+
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
@@ -85,12 +87,12 @@ app.post('/signup',
     models.Users.create(req.body)
       .then(() => {
         res.location('/');
-        res.render('./')
+        res.render('/');
         res.send();
       })
       .catch(() => {
-        res.redirect('/signup');
-        res.render('./signup')
+        res.location('/signup');
+        res.send();
       });
   });
 
